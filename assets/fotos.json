@@ -1,6 +1,9 @@
 {
-  "_nota": "Hueco del sitio → archivo en fotos/. Cambiar aquí basta, el HTML no se toca. Faltan las fotos propias de Punta Vista, Punta Maeva y Punta Rosa: hasta que lleguen, esas tarjetas salen con fondo liso a propósito.",
-  "portada": "fotos/01-grande.jpg",
-  "aloha-punta": "fotos/03-tarjeta.jpg",
-  "punta": "fotos/02-grande.jpg"
+  "_nota": "Hueco del sitio → archivo en fotos/. Las carpetas son los números de anuncio de Airbnb. ASIGNACIÓN PROVISIONAL, falta que la clienta confirme qué casa es cada carpeta.",
+  "portada": "fotos/881798100609424811/01-grande.jpg",
+  "aloha-punta": "fotos/881798100609424811/02-tarjeta.jpg",
+  "punta-vista": "fotos/1419811213595483715/01-tarjeta.jpg",
+  "punta-maeva": "fotos/1749658552181408534/01-tarjeta.jpg",
+  "punta-rosa": "fotos/1750140401554440123/01-tarjeta.jpg",
+  "punta": "fotos/1749658552181408534/02-grande.jpg"
 }
