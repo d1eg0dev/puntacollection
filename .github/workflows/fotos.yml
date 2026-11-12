@@ -192,15 +192,21 @@ jobs:
 
                   # Dos tamaños: uno para las secciones a sangre y otro para
                   # las tarjetas. Más variantes no se notan y engordan el repo.
-                  for etiqueta, ancho in (('grande', 1800), ('tarjeta', 900)):
+                  # La tarjeta se ve a 566 px en el carrusel, que en pantalla
+                  # retina son 1132 px reales: con 900 el navegador la estiraba
+                  # y por eso se veían blandas. La grande es la que se abre al
+                  # pulsar, así que se queda casi como la sirve Airbnb.
+                  for etiqueta, ancho in (('grande', 2400), ('tarjeta', 1400)):
                       if ancho_original > ancho:
                           alto = round(im.height * ancho / im.width)
                           chica = im.resize((ancho, alto), Image.LANCZOS)
                       else:
                           chica = im
                       nombre = f'{i:02d}-{etiqueta}.jpg'
-                      chica.save(carpeta / nombre, 'JPEG', quality=82,
-                                 optimize=True, progressive=True)
+                      chica.save(carpeta / nombre, 'JPEG',
+                                 quality=90 if etiqueta == 'grande' else 87,
+                                 optimize=True, progressive=True,
+                                 subsampling=0)
                       entrada['archivos'][etiqueta] = f'fotos/{grupo}/{nombre}'
                       entrada['archivos'][etiqueta + '_tamano'] = list(chica.size)
 
