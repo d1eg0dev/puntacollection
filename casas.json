@@ -1,0 +1,93 @@
+{
+  "_nota": "Los datos de las cuatro casas. De aquí salen las páginas individuales: tools/genera.py las escribe. Editar aquí y volver a correrlo, nunca el HTML generado.",
+  "casas": [
+    {
+      "slug": "aloha-punta",
+      "nombre": "Aloha Punta",
+      "carpeta": "881798100609424811",
+      "favorito": true,
+      "estrellas": "4.94",
+      "resenas": 118,
+      "huespedes": 10,
+      "recamaras": 4,
+      "banos": "5",
+      "instagram": "casa_alohapunta",
+      "estilo": { "es": "Mediterráneo · palapa", "en": "Mediterranean · palapa" },
+      "ubicacion": { "es": "300 m de la playa", "en": "300 m from the beach" },
+      "resumen": {
+        "es": "La más grande, con palapa de 150 m² en el rooftop.",
+        "en": "The largest, with a 150 m² palapa on the rooftop."
+      },
+      "texto": {
+        "es": "La casa más grande de la colección y la más cercana a la playa: trescientos metros de calle tranquila y ya estás en la arena de La Punta. Abajo, la alberca bajo una palapa de ciento cincuenta metros cuadrados, con hamaca y tumbonas, que es donde acaba pasando el día todo el mundo. Arriba, el plunge pool para el atardecer. Cuatro recámaras con su baño cada una, así que caben diez sin que nadie tenga que compartir.",
+        "en": "The largest house in the collection and the closest to the sand: three hundred metres of quiet street and you are on La Punta beach. Downstairs, the pool under a hundred-and-fifty-square-metre palapa, with a hammock and sun loungers, which is where everyone ends up spending the day. Upstairs, the plunge pool for sunset. Four bedrooms each with its own bathroom, so ten people fit without anyone having to share."
+      }
+    },
+    {
+      "slug": "punta-vista",
+      "nombre": "Punta Vista",
+      "carpeta": "1419811213595483715",
+      "favorito": false,
+      "estrellas": "4.83",
+      "resenas": 47,
+      "huespedes": 10,
+      "recamaras": 4,
+      "banos": "4.5",
+      "instagram": "casa_puntavista",
+      "estilo": { "es": "Mediterráneo · toques marroquíes", "en": "Mediterranean · Moroccan touches" },
+      "ubicacion": { "es": "Arriba de la bahía de Zicatela", "en": "Above the bay of Zicatela" },
+      "resumen": {
+        "es": "Vista a toda la bahía de Zicatela desde la alberca.",
+        "en": "A view over the whole bay of Zicatela from the pool."
+      },
+      "texto": {
+        "es": "Está más arriba que las demás, y eso lo cambia todo: desde la alberca se ve la bahía entera de Zicatela, con la sierra detrás. Arcos encalados, celosías de madera y azulejo pintado a mano, con una silla colgante sobre el agua que es la foto que todo el mundo manda al llegar. Cuatro recámaras para diez huéspedes, y el atardecer se ve sin moverse de la tumbona.",
+        "en": "It sits higher than the others, and that changes everything: from the pool you can see the whole bay of Zicatela, with the mountains behind. Whitewashed arches, wooden latticework and hand-painted tile, with a hanging chair over the water that is the photo everyone sends the moment they arrive. Four bedrooms for ten guests, and the sunset arrives without you leaving the lounger."
+      }
+    },
+    {
+      "slug": "punta-maeva",
+      "nombre": "Punta Maeva",
+      "carpeta": "1749658552181408534",
+      "favorito": true,
+      "estrellas": "5.0",
+      "resenas": 6,
+      "huespedes": 8,
+      "recamaras": 3,
+      "banos": "3.5",
+      "instagram": "casa_puntamaeva",
+      "estilo": { "es": "Mediterráneo · tonos suaves", "en": "Mediterranean · soft tones" },
+      "ubicacion": { "es": "550 m de la playa", "en": "550 m from the beach" },
+      "resumen": {
+        "es": "Alberca entre vegetación y rooftop con vista al mar.",
+        "en": "A pool among the greenery and a rooftop facing the sea."
+      },
+      "texto": {
+        "es": "La más verde de las cuatro: la alberca queda metida entre vegetación, con sombra buena a media tarde, y el rooftop se abre al mar por encima de los árboles. Tonos suaves, cerámica y madera, sin un solo color que grite. Tres recámaras con baño propio para ocho huéspedes, a siete minutos a pie de la playa.",
+        "en": "The greenest of the four: the pool sits tucked among the plants, with good shade by mid-afternoon, and the rooftop opens to the sea above the trees. Soft tones, ceramics and wood, without a single colour that shouts. Three bedrooms each with its own bathroom for eight guests, a seven minute walk from the beach."
+      }
+    },
+    {
+      "slug": "punta-rosa",
+      "nombre": "Punta Rosa",
+      "carpeta": "1750140401554440123",
+      "favorito": false,
+      "estrellas": "4.75",
+      "resenas": 8,
+      "huespedes": 6,
+      "recamaras": 2,
+      "banos": "2.5",
+      "instagram": "casa_puntarosa",
+      "estilo": { "es": "Marroquí · rosa y azul", "en": "Moroccan · pink and blue" },
+      "ubicacion": { "es": "550 m de la playa", "en": "550 m from the beach" },
+      "resumen": {
+        "es": "La más íntima: tonos rosas, cerámica y domo de ladrillo.",
+        "en": "The most intimate: pink tones, ceramics and a brick dome."
+      },
+      "texto": {
+        "es": "La más pequeña y la que tiene más personalidad: rosas terrosos, azul en los cojines, cerámica por todos lados y un domo de ladrillo que por dentro parece otra cosa. Pensada para seis, que es el número en el que una casa todavía se siente de una sola familia. Pérgola de madera en el rooftop y la playa a siete minutos caminando.",
+        "en": "The smallest and the one with the most character: earthy pinks, blue in the cushions, ceramics everywhere and a brick dome that looks like something else entirely from inside. Made for six, which is the number at which a house still feels like it belongs to one family. A wooden pergola on the rooftop and the beach a seven minute walk away."
+      }
+    }
+  ]
+}

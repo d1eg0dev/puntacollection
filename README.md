@@ -75,3 +75,21 @@ decide en qué posición aparece.
 
 El sitio trae tres reseñas escritas en el HTML como respaldo. Si el script no
 contesta, se quedan ésas, y la sección nunca sale vacía.
+
+## Páginas de cada casa
+
+Las ocho (cuatro casas × dos idiomas) las escribe `tools/genera.py` desde
+`casas.json`. **No se editan a mano**: se corrige `casas.json` y se vuelve a
+correr.
+
+```
+python3 tools/genera.py
+```
+
+Cada una lleva galería con las fotos de su carpeta, el calendario de esa casa
+y enlaces a las otras tres. El calendario sale de `assets/calendario.js` y
+pinta dos meses, con las noches ocupadas tachadas.
+
+Si `DISPONIBILIDAD` está vacío en `assets/config.js`, el calendario se pinta
+igual con todo libre y el huésped pide fechas por WhatsApp. Es a propósito:
+antes que no enseñar nada.

@@ -4,15 +4,11 @@
 (function () {
   'use strict';
 
-  /* ── Lo único que hay que tocar al poner esto en marcha ─────────── */
-
-  // URL /exec del Apps Script de disponibilidad. Vacío = el buscador no
-  // consulta nada y manda directo a WhatsApp, que es mejor que decirle al
-  // huésped «no disponible» por un fallo de configuración.
-  var DISPONIBILIDAD = '';
-
-  // Número de WhatsApp en formato internacional, sin signos.
-  var WHATSAPP = '525512345678';
+  // La configuración vive en assets/config.js, que es el único archivo que
+  // se edita al poner el sitio en marcha.
+  var CFG = window.PC || {};
+  var DISPONIBILIDAD = CFG.DISPONIBILIDAD || '';
+  var WHATSAPP = CFG.WHATSAPP || '';
 
   /* ───────────────────────────────────────────────────────────────── */
 

@@ -276,3 +276,78 @@ footer a:hover{color:#fff}
   .oculto{opacity:1;transform:none}
   .aparece{transition:none}
 }
+
+/* ── Página de casa ──────────────────────────────────────────────── */
+.casa-portada{position:relative;min-height:min(70vh,620px);display:flex;
+  align-items:flex-end;padding:120px 0 40px;overflow:hidden}
+.casa-portada .fondo{position:absolute;inset:0;background:var(--papel-hondo);
+  background-size:cover;background-position:center 56%}
+.casa-portada .velo{position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(31,27,22,.78) 0%,
+    rgba(31,27,22,.34) 44%,rgba(31,27,22,.06) 78%,rgba(31,27,22,.26) 100%)}
+.casa-portada .envoltura{position:relative;color:#fff}
+.casa-portada .rotulo{color:rgba(255,255,255,.82)}
+.casa-portada h1{margin:12px 0 14px;color:#fff}
+.casa-portada .entradilla{color:rgba(255,255,255,.88)}
+.migas{font-size:13px;color:rgba(255,255,255,.72);margin-bottom:6px}
+.migas a:hover{color:#fff}
+.ficha{display:flex;flex-wrap:wrap;gap:26px;margin-top:22px;
+  font-size:14px;color:rgba(255,255,255,.88)}
+.ficha b{font-weight:500}
+
+/* ── Galería ─────────────────────────────────────────────────────── */
+.galeria{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:860px){.galeria{grid-template-columns:repeat(2,1fr)}}
+.galeria a{display:block;aspect-ratio:4/3;overflow:hidden;border-radius:var(--radio);
+  background:var(--papel-hondo)}
+/* La primera manda: ocupa el doble y marca el tono de la casa. */
+.galeria a:first-child{grid-column:span 2;grid-row:span 2;aspect-ratio:auto}
+.galeria img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.galeria a:hover img{transform:scale(1.03)}
+
+/* ── Calendario ──────────────────────────────────────────────────── */
+.calendario{background:var(--cal);border-radius:var(--radio);padding:24px;
+  box-shadow:0 1px 2px rgba(31,27,22,.05)}
+.calendario-alto{display:flex;align-items:center;justify-content:space-between;
+  gap:16px;margin-bottom:18px}
+.paso{width:34px;height:34px;border:1px solid var(--linea);background:var(--cal);
+  border-radius:3px;cursor:pointer;font-size:17px;line-height:1;color:var(--suave)}
+.paso:hover:not(:disabled){background:var(--papel-hondo);color:var(--tinta)}
+.paso:disabled{opacity:.3;cursor:default}
+.leyenda{display:flex;gap:18px;font-size:12px;color:var(--suave)}
+.leyenda span{display:flex;align-items:center;gap:7px}
+.leyenda i{width:11px;height:11px;border-radius:2px;display:block}
+.m-ocupado{background:var(--papel-hondo);
+  background-image:repeating-linear-gradient(135deg,transparent 0 3px,rgba(31,27,22,.22) 3px 4px)}
+.m-elegido{background:var(--mar)}
+.meses{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+@media(max-width:700px){.meses{grid-template-columns:1fr}.mes:last-child{display:none}}
+.mes-alto{font-family:var(--display);font-size:1.16rem;margin-bottom:12px;
+  text-transform:capitalize}
+.rejilla{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.dia-cab{font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--tenue);text-align:center;padding-bottom:6px}
+.dia{aspect-ratio:1;border:none;background:transparent;border-radius:3px;
+  font-size:13.5px;cursor:pointer;color:var(--tinta);
+  display:flex;align-items:center;justify-content:center}
+.dia:hover:not(:disabled){background:var(--mar-palido)}
+.dia.pasado{color:var(--tenue);opacity:.45;cursor:default}
+.dia.ocupado{color:var(--tenue);cursor:default;
+  background-image:repeating-linear-gradient(135deg,transparent 0 3px,rgba(31,27,22,.16) 3px 4px);
+  text-decoration:line-through}
+.dia.elegido{background:var(--mar);color:#fff}
+.cargando{color:var(--tenue);font-size:14px;padding:30px 0;grid-column:1/-1}
+.calendario-pie{margin-top:20px;padding-top:18px;border-top:1px solid var(--linea-suave);
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.elegido-texto{font-size:14.5px;color:var(--suave)}
+.elegido-texto b{color:var(--tinta);font-weight:500}
+
+/* ── Otras casas ─────────────────────────────────────────────────── */
+.otras{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media(max-width:760px){.otras{grid-template-columns:1fr}}
+.otra{display:block;background:var(--cal);border-radius:var(--radio);overflow:hidden}
+.otra .foto{aspect-ratio:3/2;background:var(--papel-hondo);
+  background-size:cover;background-position:center}
+.otra .cuerpo{padding:18px 20px 22px}
+.otra h3{font-size:1.2rem}
+.otra span{display:block;margin-top:6px;font-size:13px;color:var(--suave)}
