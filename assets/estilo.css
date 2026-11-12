@@ -302,24 +302,25 @@ footer a:hover{color:#fff}
 .ficha b{font-weight:500}
 
 /* ── Galería en carrusel ─────────────────────────────────────────
-   Antes era una rejilla y recortaba cada foto a 4/3. Con mezcla de
-   verticales y horizontales eso se comía medio encuadre. Ahora el alto
-   manda y el ancho lo pone cada imagen, así que ninguna se recorta. */
+   Dos por vista en escritorio, una en móvil, todas del mismo ancho: así
+   nunca queda media foto asomando por el borde. Y dentro van en contain
+   sobre fondo de la paleta, para que ninguna se recorte — que era la queja
+   original con la rejilla. Las bandas que deja una vertical se leen como
+   passepartout, no como error. */
 .carrusel{position:relative}
 .tira{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;
   scroll-behavior:smooth;padding-bottom:4px;
   scrollbar-width:thin;scrollbar-color:var(--linea) transparent}
 .tira::-webkit-scrollbar{height:6px}
 .tira::-webkit-scrollbar-thumb{background:var(--linea);border-radius:3px}
-.tira a{flex:none;scroll-snap-align:start;display:block;
-  border-radius:var(--radio);overflow:hidden;background:var(--papel-hondo)}
-.tira img{display:block;height:clamp(300px,42vw,520px);width:auto;
-  max-width:none;object-fit:contain}
+.tira a{flex:0 0 calc((100% - 12px) / 2);scroll-snap-align:start;
+  aspect-ratio:4/3;display:block;border-radius:var(--radio);overflow:hidden;
+  background:var(--papel-hondo)}
+.tira img{width:100%;height:100%;object-fit:contain;
+  transition:transform .5s ease}
+.tira a:hover img{transform:scale(1.02)}
 @media(max-width:640px){
-  .tira img{height:62vw;min-height:230px}
-  /* En móvil cada foto ocupa el ancho de la pantalla y se pasa deslizando. */
-  .tira a{max-width:86vw}
-  .tira img{width:auto}
+  .tira a{flex:0 0 100%;aspect-ratio:3/2}
 }
 .flechas{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
 .flechas button{width:38px;height:38px;border:1px solid var(--linea);

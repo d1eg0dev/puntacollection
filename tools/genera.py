@@ -90,7 +90,7 @@ def pagina(casa, casas, en):
                         'recámaras y llegada autónoma.'),
         'volver': 'See all four houses' if en else 'Ver las cuatro casas',
         'derechos': 'All rights reserved.' if en else 'Todos los derechos reservados.',
-        'sitio': 'Site by' if en else 'Sitio por',
+        'sitio': 'By' if en else 'Por',
     }
 
     otras = [c for c in casas if c['slug'] != casa['slug']]
@@ -116,6 +116,14 @@ def pagina(casa, casas, en):
             f'<div class="foto"{fondo}></div>'
             f'<div class="cuerpo"><h3>{esc(c["nombre"])}</h3>'
             f'<span>{esc(c["resumen"][idioma])}</span></div></a>')
+
+    # El pie de las páginas de casa repite la navegación de la portada: mucha
+    # gente llega aquí desde Google y nunca ve la principal.
+    enlaces_pie = ''.join(
+        f'<li><a href="{c["slug"]}.html">{esc(c["nombre"])}</a></li>' for c in casas)
+    instagram_pie = ''.join(
+        f'<li><a href="https://instagram.com/{c["instagram"]}" rel="noopener">'
+        f'@{c["instagram"]}</a></li>' for c in casas)
 
     otro_idioma = (f'../../casas/{casa["slug"]}.html' if en
                    else f'../en/houses/{casa["slug"]}.html')
@@ -223,9 +231,24 @@ def pagina(casa, casas, en):
 
 <footer>
   <div class="envoltura">
-    <div class="pie-bajo" style="margin-top:0;border:none;padding-top:0">
+    <div class="pie-alto">
+      <div>
+        <div class="marca"><b>Punta Collection</b><span>Puerto Escondido</span></div>
+        <p style="margin-top:14px;max-width:34ch">La Punta de Zicatela, Puerto
+          Escondido, Oaxaca{'' if en else ''}.</p>
+      </div>
+      <div>
+        <h4>{t['casas']}</h4>
+        <ul>{enlaces_pie}</ul>
+      </div>
+      <div>
+        <h4>Instagram</h4>
+        <ul>{instagram_pie}</ul>
+      </div>
+    </div>
+    <div class="pie-bajo">
       <span>© <span id="anio">2026</span> Punta Collection. {t['derechos']}</span>
-      <span>{t['sitio']} <a href="https://wdstudio.agency" rel="noopener">WD Studio</a></span>
+      <span>{t['sitio']} <a href="https://wdstudio.agency" rel="noopener">WD Studio Agency</a></span>
     </div>
   </div>
 </footer>

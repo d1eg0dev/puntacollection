@@ -15,9 +15,9 @@
     if (!tira || !atras) return;
 
     function salto() {
-      // Un paso = lo que se ve, menos un poco, para que siempre asome la
-      // siguiente foto y se entienda que hay más.
-      return Math.max(240, tira.clientWidth * 0.8);
+      // Un paso = exactamente lo que se ve. Con las diapositivas del mismo
+      // ancho, avanzar una pantalla completa deja siempre fotos enteras.
+      return tira.clientWidth;
     }
 
     function estado() {
