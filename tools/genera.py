@@ -152,8 +152,9 @@ def pagina(casa, casas, en):
     <a href="{base}{'en/' if en else ''}" class="marca"><b>Punta Collection</b><span>Puerto Escondido</span></a>
     <nav class="menu">
       <a href="{base}{'en/' if en else ''}#casas">{t['casas']}</a>
-      <a href="{base}{'en/' if en else ''}#incluye">{'What is included' if en else 'Qué incluye'}</a>
-      <a href="{base}{'en/' if en else ''}#punta">La Punta</a>
+      <a href="{base}{'en/whats-included.html' if en else 'secciones/que-incluye.html'}">{'What is included' if en else 'Qué incluye'}</a>
+      <a href="{base}{'en/la-punta.html' if en else 'secciones/la-punta.html'}">La Punta</a>
+      <a href="{base}{'en/questions.html' if en else 'secciones/preguntas.html'}">{'Questions' if en else 'Preguntas'}</a>
       <a href="#disponibilidad">{t['disponibilidad']}</a>
     </nav>
     <div class="idiomas">

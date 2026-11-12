@@ -376,3 +376,22 @@ footer a:hover{color:#fff}
 .otra .cuerpo{padding:18px 20px 22px}
 .otra h3{font-size:1.2rem}
 .otra span{display:block;margin-top:6px;font-size:13px;color:var(--suave)}
+
+/* ── Páginas de sección ──────────────────────────────────────────── */
+.bloques{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--linea-suave);border:1px solid var(--linea-suave)}
+.bloques div{background:var(--papel);padding:32px 28px}
+.bloques h3{font-size:1.22rem;margin-bottom:9px}
+.bloques p{font-size:15px;color:var(--suave)}
+@media(max-width:860px){.bloques{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.bloques{grid-template-columns:1fr}}
+/* Cuatro casas al pie de una sección, no tres como en la página de casa. */
+.otras.cuatro{grid-template-columns:repeat(4,1fr)}
+@media(max-width:980px){.otras.cuatro{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.otras.cuatro{grid-template-columns:1fr}}
+/* Un enlace discreto al final de cada sección de la portada. */
+.mas{display:inline-flex;align-items:center;gap:8px;margin-top:26px;
+  font-size:14px;font-weight:500;color:var(--mar)}
+.mas::after{content:'';width:6px;height:6px;border-right:1.5px solid currentColor;
+  border-bottom:1.5px solid currentColor;transform:rotate(-45deg)}
+.mas:hover{color:var(--tinta)}

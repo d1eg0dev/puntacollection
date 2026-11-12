@@ -93,3 +93,23 @@ pinta dos meses, con las noches ocupadas tachadas.
 Si `DISPONIBILIDAD` está vacío en `assets/config.js`, el calendario se pinta
 igual con todo libre y el huésped pide fechas por WhatsApp. Es a propósito:
 antes que no enseñar nada.
+
+## Páginas de sección
+
+La Punta, Qué incluye y Preguntas tienen página propia, en los dos idiomas.
+Salen de `secciones.json` con `tools/genera_secciones.py`, igual que las casas.
+
+```
+python3 tools/genera_secciones.py
+```
+
+En la portada esas secciones se quedan como resumen con un enlace al final,
+para que la página principal siga leyéndose de un tirón.
+
+Van aparte sobre todo por búsquedas: «La Punta de Zicatela» se busca mucho
+más que el nombre de cualquiera de las casas, y una sección dentro de la
+portada no compite por esa búsqueda.
+
+**En los textos de La Punta no hay nombres de restaurantes ni de negocios.**
+No se pueden inventar; hay que pedirle a la clienta sus recomendaciones y
+añadirlas a `secciones.json`.
