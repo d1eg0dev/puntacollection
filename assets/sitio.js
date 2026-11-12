@@ -88,7 +88,10 @@
     fetch(DISPONIBILIDAD + '?accion=resenas')
       .then(function (r) { return r.json(); })
       .then(function (d) {
-        if (!d.ok || !d.resenas || !d.resenas.length) return;
+        // Menos de tres se verían sueltas en una rejilla de tres, así que
+        // hasta entonces se quedan las del HTML, que son reseñas reales
+        // suyas y no texto de relleno.
+        if (!d.ok || !d.resenas || d.resenas.length < 3) return;
         caja.innerHTML = d.resenas.slice(0, 3).map(function (r) {
           var firma = [r.nombre, r.lugar].filter(Boolean).join(' · ');
           return '<figure class="resena"><p>“' + esc(r.texto) + '”</p>' +
