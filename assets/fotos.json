@@ -1,9 +1,6 @@
 {
-  "_nota": "Hueco del sitio → archivo en fotos/. Cambiar aquí basta, el HTML no se toca. Los nombres los genera el flujo fotos.yml; reasignar es cuestión de cambiar el número.",
+  "_nota": "Hueco del sitio → archivo en fotos/. Cambiar aquí basta, el HTML no se toca. Faltan las fotos propias de Punta Vista, Punta Maeva y Punta Rosa: hasta que lleguen, esas tarjetas salen con fondo liso a propósito.",
   "portada": "fotos/01-grande.jpg",
-  "aloha-punta": "fotos/02-tarjeta.jpg",
-  "punta-vista": "fotos/03-tarjeta.jpg",
-  "punta-maeva": "fotos/04-tarjeta.jpg",
-  "punta-rosa": "fotos/05-tarjeta.jpg",
-  "punta": "fotos/06-grande.jpg"
+  "aloha-punta": "fotos/03-tarjeta.jpg",
+  "punta": "fotos/02-grande.jpg"
 }

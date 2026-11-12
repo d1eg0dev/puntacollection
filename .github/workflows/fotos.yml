@@ -47,24 +47,63 @@ jobs:
               return urllib.request.urlopen(
                   urllib.request.Request(url, headers=CAB), timeout=60).read()
 
-          html = trae(ORIGEN).decode('utf-8', 'replace')
+          from urllib.parse import urljoin, urlparse
+          raiz = urlparse(ORIGEN)
+          mismo = lambda u: urlparse(u).netloc in ('', raiz.netloc)
 
-          # Las direcciones aparecen tanto en el HTML servido como dentro de la
-          # carga de Next.js, que viene con las barras escapadas. Se normalizan
-          # las dos formas antes de deduplicar.
-          crudas = re.findall(r'https:\\?/\\?/a0\.muscache\.com/[^"\'\\\s)]+', html)
+          # La portada por sí sola no basta: una página de Next.js reparte el
+          # contenido entre sus rutas internas y los bundles de JavaScript, y
+          # ahí es donde suelen acabar las fotos que no se ven en el HTML.
+          def paginas():
+              vistas, cola, fuera = {ORIGEN}, [ORIGEN], []
+              while cola and len(fuera) < 40:
+                  u = cola.pop(0)
+                  try:
+                      cuerpo = trae(u).decode('utf-8', 'replace')
+                  except Exception as e:
+                      print(f'  no se pudo leer {u}: {e}')
+                      continue
+                  fuera.append((u, cuerpo))
+                  for href in re.findall(r'href="([^"#?]+)"', cuerpo):
+                      if href.startswith(('mailto:', 'tel:', 'http')) and not mismo(href):
+                          continue
+                      v = urljoin(u, href)
+                      if not mismo(v) or v in vistas:
+                          continue
+                      if re.search(r'\.(css|js|png|jpe?g|svg|ico|webp|xml|txt)$', v):
+                          continue
+                      vistas.add(v); cola.append(v)
+                  # Los bundles van en el mismo saco: el contenido de la app
+                  # suele estar escrito dentro, con las barras escapadas.
+                  for src in re.findall(r'src="([^"]+\.js)"', cuerpo):
+                      v = urljoin(u, src)
+                      if not mismo(v) or v in vistas:
+                          continue
+                      vistas.add(v)
+                      try:
+                          fuera.append((v, trae(v).decode('utf-8', 'replace')))
+                      except Exception:
+                          pass
+              return fuera
+
           vistas, urls = set(), []
-          for u in crudas:
-              u = u.replace('\\/', '/').replace('&amp;', '&')
-              # El parámetro im_w decide el tamaño que sirve Airbnb: se pide el
-              # mayor para tener margen al redimensionar nosotros.
-              base = re.sub(r'[?&]im_w=\d+', '', u)
-              if base in vistas:
-                  continue
-              vistas.add(base)
-              urls.append(base + ('&' if '?' in base else '?') + 'im_w=2560')
+          for origen_pagina, cuerpo in paginas():
+              crudas = re.findall(r'https:\\?/\\?/a0\.muscache\.com/[^"\'\\\s)]+', cuerpo)
+              nuevas = 0
+              for u in crudas:
+                  u = u.replace('\\/', '/').replace('&amp;', '&')
+                  # El parámetro im_w decide el tamaño que sirve Airbnb: se pide
+                  # el mayor para tener margen al redimensionar nosotros.
+                  base = re.sub(r'[?&]im_w=\d+', '', u)
+                  if base in vistas:
+                      continue
+                  vistas.add(base)
+                  urls.append(base + ('&' if '?' in base else '?') + 'im_w=2560')
+                  nuevas += 1
+              if nuevas:
+                  print(f'  +{nuevas} en {origen_pagina}')
 
-          print(f'{len(urls)} fotos encontradas en {ORIGEN}')
+          print(f'{len(urls)} fotos encontradas')
           if not urls:
               raise SystemExit('No se encontró ninguna foto. ¿Cambió la página de origen?')
 
