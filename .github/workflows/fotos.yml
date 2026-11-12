@@ -1,0 +1,135 @@
+name: Traer y optimizar las fotos
+
+# Las fotos del sitio actual no están en ningún proyecto: salen enlazadas en
+# caliente del CDN de Airbnb. Este flujo las baja de una vez, las deja en un
+# tamaño razonable y las versiona en el repo, para que el sitio nuevo no
+# dependa de que Airbnb mantenga esas direcciones vivas.
+#
+# Se dispara a mano. No hace falta que corra solo: una vez que las fotos
+# están en el repo, el trabajo está hecho.
+
+on:
+  workflow_dispatch:
+    inputs:
+      origen:
+        description: 'Página de la que se sacan las fotos'
+        required: true
+        default: 'https://casas-punta.vercel.app/'
+
+permissions:
+  contents: write
+
+jobs:
+  fotos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar Pillow
+        run: pip install --quiet Pillow
+
+      - name: Bajar y optimizar
+        env:
+          ORIGEN: ${{ inputs.origen }}
+        run: |
+          python3 - <<'PY'
+          import json, os, pathlib, re, urllib.request
+
+          ORIGEN = os.environ['ORIGEN']
+          CAB = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) '
+                               'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36'}
+
+          def trae(url):
+              return urllib.request.urlopen(
+                  urllib.request.Request(url, headers=CAB), timeout=60).read()
+
+          html = trae(ORIGEN).decode('utf-8', 'replace')
+
+          # Las direcciones aparecen tanto en el HTML servido como dentro de la
+          # carga de Next.js, que viene con las barras escapadas. Se normalizan
+          # las dos formas antes de deduplicar.
+          crudas = re.findall(r'https:\\?/\\?/a0\.muscache\.com/[^"\'\\\s)]+', html)
+          vistas, urls = set(), []
+          for u in crudas:
+              u = u.replace('\\/', '/').replace('&amp;', '&')
+              # El parámetro im_w decide el tamaño que sirve Airbnb: se pide el
+              # mayor para tener margen al redimensionar nosotros.
+              base = re.sub(r'[?&]im_w=\d+', '', u)
+              if base in vistas:
+                  continue
+              vistas.add(base)
+              urls.append(base + ('&' if '?' in base else '?') + 'im_w=2560')
+
+          print(f'{len(urls)} fotos encontradas en {ORIGEN}')
+          if not urls:
+              raise SystemExit('No se encontró ninguna foto. ¿Cambió la página de origen?')
+
+          from PIL import Image
+          import io
+
+          carpeta = pathlib.Path('fotos'); carpeta.mkdir(exist_ok=True)
+          manifiesto = []
+
+          for i, url in enumerate(urls, 1):
+              try:
+                  datos = trae(url)
+              except Exception as e:
+                  print(f'  {i:02d} no se pudo bajar: {e}')
+                  continue
+              im = Image.open(io.BytesIO(datos)).convert('RGB')
+              ancho_original, alto_original = im.size
+              entrada = {'n': i, 'origen': url,
+                         'original': [ancho_original, alto_original], 'archivos': {}}
+
+              # Dos tamaños: uno para las secciones a sangre y otro para las
+              # tarjetas. Más variantes no se notan y engordan el repo.
+              for etiqueta, ancho in (('grande', 1800), ('tarjeta', 900)):
+                  if ancho_original > ancho:
+                      alto = round(im.height * ancho / im.width)
+                      chica = im.resize((ancho, alto), Image.LANCZOS)
+                  else:
+                      chica = im
+                  nombre = f'{i:02d}-{etiqueta}.jpg'
+                  chica.save(carpeta / nombre, 'JPEG', quality=82,
+                             optimize=True, progressive=True)
+                  entrada['archivos'][etiqueta] = f'fotos/{nombre}'
+                  entrada['archivos'][etiqueta + '_tamano'] = list(chica.size)
+
+              manifiesto.append(entrada)
+              print(f'  {i:02d} {ancho_original}x{alto_original} → listo')
+
+          pathlib.Path('fotos/manifiesto.json').write_text(
+              json.dumps(manifiesto, indent=2, ensure_ascii=False), encoding='utf-8')
+
+          peso = sum(f.stat().st_size for f in carpeta.glob('*.jpg'))
+          print(f'\n{len(manifiesto)} fotos · {peso/1024/1024:.1f} MB en total')
+          PY
+
+      - name: Guardar en el repo
+        run: |
+          git config user.name 'github-actions'
+          git config user.email 'github-actions@github.com'
+          git add fotos
+          if git diff --cached --quiet; then
+            echo "Sin cambios en las fotos."
+          else
+            git commit -m "Fotos bajadas del sitio actual y optimizadas"
+            git push
+          fi
+
+      - name: Resumen
+        run: |
+          {
+            echo "### Fotos"
+            echo ""
+            echo "| archivo | tamaño |"
+            echo "| --- | --- |"
+            for f in fotos/*-grande.jpg; do
+              [ -e "$f" ] || continue
+              echo "| \`$f\` | $(du -h "$f" | cut -f1) |"
+            done
+          } >> "$GITHUB_STEP_SUMMARY"
