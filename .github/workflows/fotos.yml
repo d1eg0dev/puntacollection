@@ -86,8 +86,29 @@ jobs:
                           pass
               return fuera
 
+          fuentes = paginas()
+
+          # Inventario de todo lo que parezca una imagen, venga de donde venga.
+          # Sirve para no volver a asumir que sólo hay fotos en un sitio.
+          from collections import Counter
+          todas = []
+          for origen_pagina, cuerpo in fuentes:
+              todas += re.findall(
+                  r'(?:https?:\\?/\\?/[^"\'\\\s)]+|/[A-Za-z0-9._/-]+)'
+                  r'\.(?:jpe?g|png|webp|avif|gif)(?:\?[^"\'\\\s)]*)?', cuerpo)
+          limpias = [u.replace('\\/', '/') for u in todas]
+          porhost = Counter(
+              (urlparse(u).netloc or 'relativas') for u in limpias)
+          print('--- inventario de imágenes ---')
+          for host, n in porhost.most_common():
+              print(f'  {n:3d}  {host}')
+          print(f'  total con repetidos: {len(limpias)} · distintas: {len(set(limpias))}')
+          for u in sorted(set(limpias))[:60]:
+              print('   ·', u[:150])
+          print('--- fin del inventario ---')
+
           vistas, urls = set(), []
-          for origen_pagina, cuerpo in paginas():
+          for origen_pagina, cuerpo in fuentes:
               crudas = re.findall(r'https:\\?/\\?/a0\.muscache\.com/[^"\'\\\s)]+', cuerpo)
               nuevas = 0
               for u in crudas:
