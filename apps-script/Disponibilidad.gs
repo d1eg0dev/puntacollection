@@ -53,6 +53,69 @@ function doGet(e) {
   }
 }
 
+/* ---------- reseñas que deja el huésped ----------
+   El punto de todo esto: cada reseña directa es de ellos y sigue ahí si un
+   día se salen de Airbnb. Entra siempre como pendiente; sale en el sitio
+   sólo cuando Maia pone «sí» en la columna mostrar.                       */
+function doPost(e) {
+  try {
+    var d = JSON.parse((e.postData && e.postData.contents) || '{}');
+
+    // Campo trampa: está escondido con CSS, así que un humano nunca lo llena
+    // y casi todos los robots sí. Se contesta ok para no enseñarles el truco.
+    if (d.web) return json_({ ok: true });
+
+    var texto = String(d.texto || '').trim();
+    if (texto.length < 15) throw new Error('la reseña está vacía o es muy corta');
+    if (texto.length > 1500) texto = texto.slice(0, 1500);
+
+    var id = PropertiesService.getScriptProperties().getProperty('HOJA_RESENAS_ID');
+    if (!id) throw new Error('falta la hoja de reseñas');
+
+    var h = SpreadsheetApp.openById(id).getSheetByName(HOJA_RESENAS);
+    var candado = LockService.getScriptLock();
+    candado.waitLock(10000);
+    try {
+      h.appendRow([
+        texto,
+        String(d.nombre || '').trim().slice(0, 80),
+        String(d.lugar || '').trim().slice(0, 80),
+        String(d.casa || '').trim().slice(0, 40),
+        'no',                                   // pendiente de aprobación
+        h.getLastRow() + 100,                   // al final hasta que se ordene
+        new Date()
+      ]);
+    } finally {
+      candado.releaseLock();
+    }
+
+    avisa_(d);
+    return json_({ ok: true });
+  } catch (err) {
+    return json_({ ok: false, error: String(err.message || err) });
+  }
+}
+
+function avisa_(d) {
+  var correo = PropertiesService.getScriptProperties().getProperty('AVISAR_A');
+  if (!correo) return;
+  try {
+    MailApp.sendEmail({
+      to: correo,
+      subject: 'Reseña nueva · ' + (d.casa || 'Punta Collection'),
+      body: [
+        (d.nombre || 'Alguien') + (d.lugar ? ' · ' + d.lugar : '') +
+          ' dejó una reseña' + (d.casa ? ' de ' + d.casa : '') + ':',
+        '',
+        String(d.texto || ''),
+        '',
+        'Está guardada como pendiente. Para que salga en el sitio, pon «sí»',
+        'en la columna mostrar de la hoja de reseñas.'
+      ].join('\n')
+    });
+  } catch (err) { /* que no se caiga la reseña por un correo */ }
+}
+
 function casasConfiguradas_() {
   var crudo = PropertiesService.getScriptProperties().getProperty('CASAS_ICAL');
   if (!crudo) throw new Error('falta la propiedad CASAS_ICAL');
@@ -129,7 +192,7 @@ function resenas_() {
   var h = SpreadsheetApp.openById(id).getSheetByName(HOJA_RESENAS);
   if (!h || h.getLastRow() < 2) return [];
 
-  var filas = h.getRange(1, 1, h.getLastRow(), 6).getValues();
+  var filas = h.getRange(1, 1, h.getLastRow(), 7).getValues();
   var cab = filas.shift().map(function (c) { return String(c).trim().toLowerCase(); });
   function col(nombre) { return cab.indexOf(nombre); }
 
@@ -157,7 +220,7 @@ function resenas_() {
 function creaHojaResenas() {
   var ss = SpreadsheetApp.create('Punta Collection · Reseñas');
   var h = ss.getSheets()[0].setName(HOJA_RESENAS);
-  var cab = ['texto', 'nombre', 'lugar', 'casa', 'mostrar', 'orden'];
+  var cab = ['texto', 'nombre', 'lugar', 'casa', 'mostrar', 'orden', 'recibida'];
   h.getRange(1, 1, 1, cab.length).setValues([cab])
     .setFontWeight('bold').setFontColor('#ffffff').setBackground('#1F5B57');
   h.setFrozenRows(1);
@@ -165,7 +228,7 @@ function creaHojaResenas() {
   h.getRange('A:A').setWrap(true);
   h.getRange(2, 1, 1, cab.length).setValues([[
     'Desde que llegamos los anfitriones nos atendieron de la mejor manera y nos apoyaron con el transporte, tours y recomendaciones.',
-    'Alfonzo', 'Chula Vista, California', 'Aloha Punta', 'sí', 1]]);
+    'Alfonzo', 'Chula Vista, California', 'Aloha Punta', 'sí', 1, new Date()]]);
   PropertiesService.getScriptProperties()
     .setProperty('HOJA_RESENAS_ID', ss.getId());
   Logger.log('Hoja creada y registrada: ' + ss.getUrl());

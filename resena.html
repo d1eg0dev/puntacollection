@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Deja tu reseña · Punta Collection</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/estilo.css">
+<style>
+  .hoja{max-width:640px;margin:0 auto;padding:clamp(48px,8vw,90px) 28px}
+  .hoja .cabecera{margin-bottom:34px}
+  .formulario{display:grid;gap:20px}
+  .formulario .campo label{color:var(--suave);font-size:10.5px}
+  .formulario textarea{
+    width:100%;min-height:170px;resize:vertical;padding:14px;
+    border:1px solid var(--linea);border-radius:3px;background:var(--cal);
+    font:inherit;font-size:15.5px;line-height:1.6;color:var(--tinta);
+  }
+  .formulario textarea:focus,.formulario input:focus,.formulario select:focus{
+    outline:2px solid var(--mar);outline-offset:-1px;border-color:transparent}
+  .par{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:520px){.par{grid-template-columns:1fr}}
+  /* Campo trampa: invisible para una persona, tentador para un robot. */
+  .trampa{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+  .gracias{display:none;background:var(--mar-palido);border-left:3px solid var(--mar);
+    padding:26px 28px;border-radius:var(--radio)}
+  .gracias h2{font-size:1.9rem;margin-bottom:10px}
+  .gracias p{color:var(--suave)}
+  .fallo{display:none;color:var(--barro-hondo);font-size:14.5px}
+</style>
+</head>
+<body>
+
+<header class="barra">
+  <div class="envoltura">
+    <a href="/" class="marca"><b>Punta Collection</b><span>Puerto Escondido</span></a>
+    <div class="idiomas" style="margin-left:auto">
+      <a href="/resena.html" class="activo">ES</a>
+      <a href="/en/review.html">EN</a>
+    </div>
+  </div>
+</header>
+
+<main class="hoja">
+
+  <div id="formulario-caja">
+    <div class="cabecera">
+      <p class="rotulo">Gracias por quedarte con nosotros</p>
+      <h2 style="margin:12px 0 14px">¿Cómo te fue?</h2>
+      <p class="entradilla">Tu reseña nos ayuda muchísimo y además la leen los
+        huéspedes que vienen después. Dos minutos y nos haces un favor enorme.</p>
+    </div>
+
+    <form class="formulario" id="form-resena" autocomplete="off">
+      <div class="campo">
+        <label for="texto">Tu reseña</label>
+        <textarea id="texto" name="texto" required minlength="15"
+          placeholder="¿Qué tal la casa, la ubicación, el equipo?"></textarea>
+      </div>
+      <div class="par">
+        <div class="campo">
+          <label for="nombre">Tu nombre</label>
+          <input type="text" id="nombre" name="nombre" maxlength="80" placeholder="Carlos">
+        </div>
+        <div class="campo">
+          <label for="lugar">De dónde vienes</label>
+          <input type="text" id="lugar" name="lugar" maxlength="80" placeholder="Saltillo">
+        </div>
+      </div>
+      <div class="campo">
+        <label for="casa">¿En qué casa te quedaste?</label>
+        <select id="casa" name="casa">
+          <option value="">Elige una</option>
+          <option>Aloha Punta</option>
+          <option>Punta Vista</option>
+          <option>Punta Maeva</option>
+          <option>Punta Rosa</option>
+        </select>
+      </div>
+      <div class="trampa" aria-hidden="true">
+        <label for="web">No llenes esto</label>
+        <input type="text" id="web" name="web" tabindex="-1" autocomplete="off">
+      </div>
+      <div>
+        <button type="submit" class="boton" id="enviar">Enviar reseña</button>
+        <p class="fallo" id="fallo" style="margin-top:12px"></p>
+      </div>
+      <p style="font-size:13px;color:var(--tenue)">La publicamos en el sitio sólo
+        después de leerla. No pedimos correo ni ningún otro dato.</p>
+    </form>
+  </div>
+
+  <div class="gracias" id="gracias">
+    <h2>Gracias de verdad</h2>
+    <p>Ya la recibimos. La leemos y la publicamos en los próximos días.
+      Esperamos verte pronto por La Punta.</p>
+    <p style="margin-top:18px"><a class="boton linea" href="/">Volver al inicio</a></p>
+  </div>
+
+</main>
+
+<footer>
+  <div class="envoltura">
+    <div class="pie-bajo" style="margin-top:0;border:none;padding-top:0">
+      <span>© <span id="anio">2026</span> Punta Collection.</span>
+      <span>La Punta de Zicatela, Puerto Escondido, Oaxaca</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  // La misma URL /exec que usa el resto del sitio.
+  var DESTINO = '';
+
+  var form = document.getElementById('form-resena');
+  var fallo = document.getElementById('fallo');
+  var boton = document.getElementById('enviar');
+  document.getElementById('anio').textContent = new Date().getFullYear();
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    fallo.style.display = 'none';
+
+    var datos = {
+      texto: document.getElementById('texto').value.trim(),
+      nombre: document.getElementById('nombre').value.trim(),
+      lugar: document.getElementById('lugar').value.trim(),
+      casa: document.getElementById('casa').value,
+      web: document.getElementById('web').value
+    };
+    if (datos.texto.length < 15) {
+      return falla('Cuéntanos un poquito más, con una frase basta.');
+    }
+    if (!DESTINO) {
+      return falla('El formulario todavía no está conectado.');
+    }
+
+    boton.disabled = true;
+    boton.textContent = 'Enviando…';
+
+    // text/plain evita la petición previa de CORS, que Apps Script no contesta.
+    fetch(DESTINO, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(datos)
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d.ok) throw new Error(d.error || '');
+        document.getElementById('formulario-caja').style.display = 'none';
+        document.getElementById('gracias').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      })
+      .catch(function () {
+        falla('No se pudo enviar. Inténtalo otra vez en un momento.');
+        boton.disabled = false;
+        boton.textContent = 'Enviar reseña';
+      });
+  });
+
+  function falla(m) {
+    fallo.textContent = m;
+    fallo.style.display = 'block';
+  }
+})();
+</script>
+</body>
+</html>

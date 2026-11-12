@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Leave a review · Punta Collection</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/estilo.css">
+<style>
+  .hoja{max-width:640px;margin:0 auto;padding:clamp(48px,8vw,90px) 28px}
+  .hoja .cabecera{margin-bottom:34px}
+  .formulario{display:grid;gap:20px}
+  .formulario .campo label{color:var(--suave);font-size:10.5px}
+  .formulario textarea{
+    width:100%;min-height:170px;resize:vertical;padding:14px;
+    border:1px solid var(--linea);border-radius:3px;background:var(--cal);
+    font:inherit;font-size:15.5px;line-height:1.6;color:var(--tinta);
+  }
+  .formulario textarea:focus,.formulario input:focus,.formulario select:focus{
+    outline:2px solid var(--mar);outline-offset:-1px;border-color:transparent}
+  .par{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:520px){.par{grid-template-columns:1fr}}
+  /* Campo trampa: invisible para una persona, tentador para un robot. */
+  .trampa{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+  .gracias{display:none;background:var(--mar-palido);border-left:3px solid var(--mar);
+    padding:26px 28px;border-radius:var(--radio)}
+  .gracias h2{font-size:1.9rem;margin-bottom:10px}
+  .gracias p{color:var(--suave)}
+  .fallo{display:none;color:var(--barro-hondo);font-size:14.5px}
+</style>
+</head>
+<body>
+
+<header class="barra">
+  <div class="envoltura">
+    <a href="/" class="marca"><b>Punta Collection</b><span>Puerto Escondido</span></a>
+    <div class="idiomas" style="margin-left:auto">
+      <a href="/resena.html">ES</a>
+      <a href="/en/review.html" class="activo">EN</a>
+    </div>
+  </div>
+</header>
+
+<main class="hoja">
+
+  <div id="formulario-caja">
+    <div class="cabecera">
+      <p class="rotulo">Thank you for staying with us</p>
+      <h2 style="margin:12px 0 14px">How was it?</h2>
+      <p class="entradilla">Your review helps us enormously, and the guests who come after you
+        read it too. Two minutes and you have done us a big favour.</p>
+    </div>
+
+    <form class="formulario" id="form-resena" autocomplete="off">
+      <div class="campo">
+        <label for="texto">Your review</label>
+        <textarea id="texto" name="texto" required minlength="15"
+          placeholder="How was the house, the location, the team?"></textarea>
+      </div>
+      <div class="par">
+        <div class="campo">
+          <label for="nombre">Your name</label>
+          <input type="text" id="nombre" name="nombre" maxlength="80" placeholder="Carlos">
+        </div>
+        <div class="campo">
+          <label for="lugar">Where you are from</label>
+          <input type="text" id="lugar" name="lugar" maxlength="80" placeholder="Saltillo">
+        </div>
+      </div>
+      <div class="campo">
+        <label for="casa">Which house did you stay in?</label>
+        <select id="casa" name="casa">
+          <option value="">Pick one</option>
+          <option>Aloha Punta</option>
+          <option>Punta Vista</option>
+          <option>Punta Maeva</option>
+          <option>Punta Rosa</option>
+        </select>
+      </div>
+      <div class="trampa" aria-hidden="true">
+        <label for="web">Do not fill this in</label>
+        <input type="text" id="web" name="web" tabindex="-1" autocomplete="off">
+      </div>
+      <div>
+        <button type="submit" class="boton" id="enviar">Send review</button>
+        <p class="fallo" id="fallo" style="margin-top:12px"></p>
+      </div>
+      <p style="font-size:13px;color:var(--tenue)">We only publish it on the site after reading it. We do not ask
+        for your email or anything else.</p>
+    </form>
+  </div>
+
+  <div class="gracias" id="gracias">
+    <h2>Thank you, truly</h2>
+    <p>We have it. We will read it and put it up in the next few days.
+      We hope to see you back in La Punta soon.</p>
+    <p style="margin-top:18px"><a class="boton linea" href="/">Back to the homepage</a></p>
+  </div>
+
+</main>
+
+<footer>
+  <div class="envoltura">
+    <div class="pie-bajo" style="margin-top:0;border:none;padding-top:0">
+      <span>© <span id="anio">2026</span> Punta Collection.</span>
+      <span>La Punta de Zicatela, Puerto Escondido, Oaxaca</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  // La misma URL /exec que usa el resto del sitio.
+  var DESTINO = '';
+
+  var form = document.getElementById('form-resena');
+  var fallo = document.getElementById('fallo');
+  var boton = document.getElementById('enviar');
+  document.getElementById('anio').textContent = new Date().getFullYear();
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    fallo.style.display = 'none';
+
+    var datos = {
+      texto: document.getElementById('texto').value.trim(),
+      nombre: document.getElementById('nombre').value.trim(),
+      lugar: document.getElementById('lugar').value.trim(),
+      casa: document.getElementById('casa').value,
+      web: document.getElementById('web').value
+    };
+    if (datos.texto.length < 15) {
+      return falla('Tell us a little more, one sentence is enough.');
+    }
+    if (!DESTINO) {
+      return falla('The form is not connected yet.');
+    }
+
+    boton.disabled = true;
+    boton.textContent = 'Sending…';
+
+    // text/plain evita la petición previa de CORS, que Apps Script no contesta.
+    fetch(DESTINO, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(datos)
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d.ok) throw new Error(d.error || '');
+        document.getElementById('formulario-caja').style.display = 'none';
+        document.getElementById('gracias').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      })
+      .catch(function () {
+        falla('It could not be sent. Please try again in a moment.');
+        boton.disabled = false;
+        boton.textContent = 'Send review';
+      });
+  });
+
+  function falla(m) {
+    fallo.textContent = m;
+    fallo.style.display = 'block';
+  }
+})();
+</script>
+</body>
+</html>
