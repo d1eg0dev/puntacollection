@@ -96,10 +96,16 @@ def pagina(casa, casas, en):
     otras = [c for c in casas if c['slug'] != casa['slug']]
     enlace_otra = (lambda c: f'{c["slug"]}.html')
 
-    galeria = ''
-    for grande, tarjeta in fotos[:9]:
-        galeria += (f'<a href="{base}{grande}" target="_blank" rel="noopener">'
-                    f'<img src="{base}{tarjeta}" alt="{esc(nombre)}" loading="lazy"></a>')
+    # Todas las fotos, no nueve: ahora que van en carrusel no estorban.
+    diapositivas = ''
+    for grande, tarjeta in fotos:
+        diapositivas += (f'<a href="{base}{grande}" target="_blank" rel="noopener">'
+                         f'<img src="{base}{tarjeta}" alt="{esc(nombre)}" loading="lazy"></a>')
+    galeria = (f'<div class="tira">{diapositivas}</div>'
+               f'<div class="flechas">'
+               f'<button type="button" class="atras" aria-label="Anterior">‹</button>'
+               f'<button type="button" class="adelante" aria-label="Siguiente">›</button>'
+               f'</div>')
 
     tarjetas_otras = ''
     for c in otras:
@@ -177,7 +183,7 @@ def pagina(casa, casas, en):
       <h2 style="margin:12px 0 14px">{esc(nombre)}</h2>
       <p class="entradilla">{esc(casa['texto'][idioma])}</p>
     </div>
-    <div class="galeria oculto">{galeria}</div>
+    <div class="carrusel oculto">{galeria}</div>
   </div>
 </section>
 
@@ -230,6 +236,7 @@ def pagina(casa, casas, en):
 
 <script src="{base}assets/config.js"></script>
 <script src="{base}assets/calendario.js"></script>
+<script src="{base}assets/carrusel.js"></script>
 <script>
   document.getElementById('anio').textContent = new Date().getFullYear();
   var wa = document.getElementById('wa-flotante');

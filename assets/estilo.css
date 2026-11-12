@@ -80,7 +80,13 @@ h3{font-size:clamp(1.3rem,2.2vw,1.65rem)}
 .idiomas a{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
   padding:5px 8px;border-radius:3px;color:var(--tenue)}
 .idiomas a.activo{color:var(--tinta);background:var(--papel-hondo)}
-@media(max-width:900px){.menu{display:none}}
+@media(max-width:900px){
+  .menu{display:none}
+  /* Sin el menú, los idiomas se quedaban pegados al logo: el empujón lo
+     daba el margin-left:auto del menú, que ya no está. */
+  .idiomas{margin-left:auto}
+  .barra .envoltura{gap:16px}
+}
 
 /* ── Portada ─────────────────────────────────────────────────────── */
 .portada{position:relative;min-height:min(86vh,760px);display:flex;
@@ -295,15 +301,33 @@ footer a:hover{color:#fff}
   font-size:14px;color:rgba(255,255,255,.88)}
 .ficha b{font-weight:500}
 
-/* ── Galería ─────────────────────────────────────────────────────── */
-.galeria{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-@media(max-width:860px){.galeria{grid-template-columns:repeat(2,1fr)}}
-.galeria a{display:block;aspect-ratio:4/3;overflow:hidden;border-radius:var(--radio);
-  background:var(--papel-hondo)}
-/* La primera manda: ocupa el doble y marca el tono de la casa. */
-.galeria a:first-child{grid-column:span 2;grid-row:span 2;aspect-ratio:auto}
-.galeria img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
-.galeria a:hover img{transform:scale(1.03)}
+/* ── Galería en carrusel ─────────────────────────────────────────
+   Antes era una rejilla y recortaba cada foto a 4/3. Con mezcla de
+   verticales y horizontales eso se comía medio encuadre. Ahora el alto
+   manda y el ancho lo pone cada imagen, así que ninguna se recorta. */
+.carrusel{position:relative}
+.tira{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;padding-bottom:4px;
+  scrollbar-width:thin;scrollbar-color:var(--linea) transparent}
+.tira::-webkit-scrollbar{height:6px}
+.tira::-webkit-scrollbar-thumb{background:var(--linea);border-radius:3px}
+.tira a{flex:none;scroll-snap-align:start;display:block;
+  border-radius:var(--radio);overflow:hidden;background:var(--papel-hondo)}
+.tira img{display:block;height:clamp(300px,42vw,520px);width:auto;
+  max-width:none;object-fit:contain}
+@media(max-width:640px){
+  .tira img{height:62vw;min-height:230px}
+  /* En móvil cada foto ocupa el ancho de la pantalla y se pasa deslizando. */
+  .tira a{max-width:86vw}
+  .tira img{width:auto}
+}
+.flechas{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+.flechas button{width:38px;height:38px;border:1px solid var(--linea);
+  background:var(--cal);border-radius:3px;cursor:pointer;font-size:17px;
+  line-height:1;color:var(--suave)}
+.flechas button:hover:not(:disabled){background:var(--papel-hondo);color:var(--tinta)}
+.flechas button:disabled{opacity:.3;cursor:default}
+@media(max-width:640px){.flechas{display:none}}
 
 /* ── Calendario ──────────────────────────────────────────────────── */
 .calendario{background:var(--cal);border-radius:var(--radio);padding:24px;
